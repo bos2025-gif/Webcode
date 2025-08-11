@@ -1,0 +1,215 @@
+/* Pemboleh ubah CSS untuk tema dan tetapan global */
+:root {
+    --primary-color: #1a73e8; /* Biru Google yang lebih lembut */
+    --secondary-color: #34a853; /* Hijau untuk butang save */
+    --danger-color: #e63946; /* Merah untuk butang clear */
+    --dark-bg: #1e1e1e; /* Latar belakang gelap */
+    --light-bg: #ffffff; /* Latar belakang terang untuk pratonton */
+    --text-dark: #333333;
+    --text-light: #e0e0e0; /* Warna teks lebih lembut */
+    --editor-bg: #2d2d2d; /* Latar belakang editor yang lebih halus */
+    --border-radius: 10px; /* Jejari sempadan yang lebih lembut */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bayang lembut */
+    --transition: all 0.3s ease; /* Peralihan halus */
+}
+
+/* Gaya asas untuk body */
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    overscroll-behavior: none;
+}
+
+/* Susun atur grid untuk container */
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Susun atur flex untuk ruangan editor */
+.editor-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Gaya untuk tajuk */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #2a2a2a;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.status {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background-color: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Gaya untuk wrapper textarea */
+.code-wrapper {
+    flex: 1;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+/* Gaya untuk textarea input kod */
+textarea {
+    width: 100%;
+    height: 50vh;
+    max-height: 60vh;
+    padding: 15px;
+    background-color: var(--editor-bg);
+    color: var(--text-light);
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    border: none;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+textarea:focus {
+    border: 2px solid var(--primary-color);
+}
+
+/* Susun atur untuk kumpulan butang */
+.button-group {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+/* Gaya asas untuk butang */
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+    touch-action: manipulation;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Gaya khusus untuk butang Run */
+#run-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Gaya khusus untuk butang Save */
+#save-btn {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Gaya khusus untuk butang Clear */
+#clear-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Gaya untuk kawasan pratonton */
+#preview {
+    height: 30vh;
+    border-radius: var(--border-radius);
+    border: 1px solid #444;
+    background-color: var(--light-bg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+/* Gaya untuk iframe pratonton */
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: var(--light-bg); /* Pastikan latar belakang iframe konsisten */
+}
+
+/* Gaya untuk iframe dalam mod skrin penuh */
+:fullscreen iframe,
+:-webkit-full-screen iframe,
+:-moz-full-screen iframe {
+    border-radius: 0; /* Keluarkan jejari sempadan dalam mod skrin penuh */
+    border: none;
+}
+
+/* Media queries untuk skrin kecil (smartphone) */
+@media screen and (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .editor-column {
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .status {
+        font-size: 0.8rem;
+    }
+
+    textarea {
+        font-size: 12px;
+        height: 40vh;
+    }
+
+    .button-group {
+        flex-wrap: wrap; /* Membolehkan butang berbalut pada skrin kecil */
+    }
+
+    button {
+        padding: 10px;
+        font-size: 0.9rem;
+        flex: 1;
+    }
+
+    #preview {
+        height: 35vh;
+    }
+}
