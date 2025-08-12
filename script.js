@@ -2,6 +2,8 @@
 const runBtn = document.getElementById('run-btn');
 const saveBtn = document.getElementById('save-btn');
 const clearBtn = document.getElementById('clear-btn');
+const uploadBtn = document.getElementById('upload-btn');
+const fileInput = document.getElementById('file-input');
 const codeInput = document.getElementById('code-input');
 const previewFrame = document.getElementById('preview-frame');
 const statusMessage = document.getElementById('status-message');
@@ -10,6 +12,8 @@ const statusMessage = document.getElementById('status-message');
 runBtn.addEventListener('click', runCode);
 saveBtn.addEventListener('click', saveCode);
 clearBtn.addEventListener('click', clearCode);
+uploadBtn.addEventListener('click', () => fileInput.click()); // Mencetuskan input fail
+fileInput.addEventListener('change', uploadCode);
 
 // Fungsi untuk menjalankan kod dan masuk ke mod skrin penuh
 function runCode() {
@@ -28,7 +32,7 @@ function runCode() {
         }
 
         setTimeout(() => {
-            statusMessage.textContent = 'Fullscreen (Press Esc to exit)';
+           COME2 statusMessage.textContent = 'Fullscreen (Press Esc to exit)';
         }, 500);
     } catch (error) {
         statusMessage.textContent = 'Error';
@@ -85,6 +89,50 @@ function clearCode() {
             statusMessage.textContent = 'Ready';
         }, 2000);
     }
+}
+
+// Fungsi untuk memuat naik kod
+function uploadCode(event) {
+    const file = event.target.files[0];
+    if (!file) {
+        statusMessage.textContent = 'No file selected!';
+        setTimeout(() => {
+            statusMessage.textContent = 'Ready';
+        }, 2000);
+        return;
+    }
+
+    // Semak jenis fail
+    const validTypes = ['text/html', 'text/plain', 'application/javascript', 'text/css'];
+    if (!validTypes.includes(file.type)) {
+        statusMessage.textContent = 'Invalid file type! Please upload .html, .txt, .js, or .css';
+        setTimeout(() => {
+            statusMessage.textContent = 'Ready';
+        }, 2000);
+        return;
+    }
+
+    // Baca kandungan fail
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        codeInput.value = e.target.result;
+        autoResizeTextarea();
+        runCode(); // Jalankan kod secara automatik
+        statusMessage.textContent = 'File uploaded!';
+        setTimeout(() => {
+            statusMessage.textContent = 'Ready';
+        }, 2000);
+    };
+    reader.onerror = function() {
+        statusMessage.textContent = 'Error reading file!';
+        setTimeout(() => {
+            statusMessage.textContent = 'Ready';
+        }, 2000);
+    };
+    reader.readAsText(file);
+
+    // Tetapkan semula input fail
+    event.target.value = '';
 }
 
 // Auto-run kod semasa halaman dimuatkan
