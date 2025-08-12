@@ -2,51 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Simple Code Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML, CSS, JS Simulator</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <!-- Container utama untuk susun atur editor -->
     <div class="container">
-        <div class="editor-column">
-            <!-- Tajuk editor -->
-            <div class="header">
-                <h1>Simple Code Editor</h1>
-                <div class="status" id="status-message">Ready</div>
+        <header>
+            <h1>Code Playground</h1>
+            <p>Create and test your HTML, CSS, and JavaScript code with instant preview.</p>
+        </header>
+        
+        <!-- File Import Section -->
+        <div class="import-section">
+            <label for="file-input" class="import-label">Import Files (HTML, CSS, JS):</label>
+            <input type="file" id="file-input" multiple accept=".html,.css,.js" class="import-input">
+        </div>
+
+        <!-- Editor Section -->
+        <div class="editor-grid">
+            <div class="editor-card">
+                <h3>HTML</h3>
+                <textarea id="html-editor" placeholder="Write your HTML code here..." spellcheck="false"></textarea>
             </div>
-            
-            <!-- Kawasan input kod -->
-            <div class="code-wrapper">
-                <textarea id="code-input" inputmode="text" placeholder="Masukkan kod HTML, CSS, dan JS di sini...&#10;&#10;Contoh:&#10;&lt;div style='color: blue;'&gt;Hello World!&lt;/div&gt;&#10;&lt;script&gt;console.log('Hello!');&lt;/script&gt;"></textarea>
+            <div class="editor-card">
+                <h3>CSS</h3>
+                <textarea id="css-editor" placeholder="Write your CSS code here..." spellcheck="false"></textarea>
             </div>
-            
-            <!-- Butang untuk menjalankan, menyimpan, mengosongkan, dan memuat naik kod -->
-            <div class="button-group">
-                <button id="run-btn">
-                    <i class="fas fa-play"></i> Run Code
-                </button>
-                <button id="save-btn">
-                    <i class="fas fa-save"></i> Save Code
-                </button>
-                <button id="clear-btn">
-                    <i class="fas fa-trash"></i> Clear Code
-                </button>
-                <button id="upload-btn">
-                    <i class="fas fa-upload"></i> Upload Code
-                </button>
-                <input type="file" id="file-input" accept=".html,.txt,.js,.css" style="display: none;">
-            </div>
-            
-            <!-- Pratonton hasil kod dalam iframe -->
-            <div id="preview">
-                <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+            <div class="editor-card">
+                <h3>JavaScript</h3>
+                <textarea id="js-editor" placeholder="Write your JavaScript code here..." spellcheck="false"></textarea>
             </div>
         </div>
-    </div>
 
-    <!-- Memuatkan skrip JavaScript -->
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button onclick="runCode()" class="run-button">Run Code</button>
+            <button onclick="clearEditors()" class="clear-button">Clear Editors</button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section">
+            <h3>Preview</h3>
+            <iframe id="output-frame"></iframe>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

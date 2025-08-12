@@ -1,167 +1,62 @@
-// DOM Elements
-const runBtn = document.getElementById('run-btn');
-const saveBtn = document.getElementById('save-btn');
-const clearBtn = document.getElementById('clear-btn');
-const uploadBtn = document.getElementById('upload-btn');
-const fileInput = document.getElementById('file-input');
-const codeInput = document.getElementById('code-input');
-const previewFrame = document.getElementById('preview-frame');
-const statusMessage = document.getElementById('status-message');
-
-// Event Listeners
-runBtn.addEventListener('click', runCode);
-saveBtn.addEventListener('click', saveCode);
-clearBtn.addEventListener('click', clearCode);
-uploadBtn.addEventListener('click', () => fileInput.click()); // Mencetuskan input fail
-fileInput.addEventListener('change', uploadCode);
-
-// Fungsi untuk menjalankan kod dan masuk ke mod skrin penuh
+// Fungsi untuk menjalankan kode
 function runCode() {
-    try {
-        statusMessage.textContent = 'Running...';
-        const code = codeInput.value;
-        previewFrame.srcdoc = code;
+    const htmlCode = document.getElementById('html-editor').value;
+    const cssCode = document.getElementById('css-editor').value;
+    const jsCode = document.getElementById('js-editor').value;
+    const outputFrame = document.getElementById('output-frame');
 
-        // Masuk ke mod skrin penuh dengan keserasian pelbagai pelayar
-        if (previewFrame.requestFullscreen) {
-            previewFrame.requestFullscreen();
-        } else if (previewFrame.webkitRequestFullscreen) { // Safari
-            previewFrame.webkitRequestFullscreen();
-        } else if (previewFrame.mozRequestFullScreen) { // Firefox
-            previewFrame.mozRequestFullScreen();
-        } else if (previewFrame.msRequestFullscreen) { // Edge/IE
-            previewFrame.msRequestFullscreen();
-        }
+    // Membuat dokumen HTML lengkap
+    const fullCode = `
+        <html>
+        <head>
+            <style>${cssCode}</style>
+        </head>
+        <body>
+            ${htmlCode}
+            <script>${jsCode}</script>
+        </body>
+        </html>
+    `;
 
-        setTimeout(() => {
-            statusMessage.textContent = 'Fullscreen (Press Esc to exit)';
-        }, 500);
-    } catch (error) {
-        statusMessage.textContent = 'Error: ' + error.message;
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 3000);
-    }
+    // Menulis kode ke iframe
+    outputFrame.contentDocument.open();
+    outputFrame.contentDocument.write(fullCode);
+    outputFrame.contentDocument.close();
 }
 
-// Fungsi untuk menyimpan kod
-function saveCode() {
-    const code = codeInput.value;
-    if (!code.trim()) {
-        statusMessage.textContent = 'No code to save!';
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 2000);
-        return;
-    }
-    
-    // Cipta nama fail dengan timestamp
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `my-code-${timestamp}.html`;
-    
-    // Cipta pautan muat turun
-    const blob = new Blob([code], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    
-    // Mencetuskan muat turun
-    document.body.appendChild(a);
-    a.click();
-    
-    // Pembersihan
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    statusMessage.textContent = 'Saved!';
-    setTimeout(() => {
-        statusMessage.textContent = 'Ready';
-    }, 2000);
+// Fungsi untuk mengosongkan editor
+function clearEditors() {
+    document.getElementById('html-editor').value = '';
+    document.getElementById('css-editor').value = '';
+    document.getElementById('js-editor').value = '';
+    document.getElementById('output-frame').contentDocument.open();
+    document.getElementById('output-frame').contentDocument.write('');
+    document.getElementById('output-frame').contentDocument.close();
 }
 
-// Fungsi untuk mengosongkan kod
-function clearCode() {
-    if (confirm('Adakah anda pasti mahu mengosongkan kod?')) {
-        codeInput.value = '';
-        previewFrame.srcdoc = '';
-        autoResizeTextarea();
-        statusMessage.textContent = 'Code cleared!';
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 2000);
+// Fungsi untuk menangani import file
+document.getElementById('file-input').addEventListener('change', function(event) {
+    const files = event.target.files;
+    const htmlEditor = document.getElementById('html-editor');
+    const cssEditor = document.getElementById('css-editor');
+    const jsEditor = document.getElementById('js-editor');
+
+    // Loop melalui file yang diunggah
+    for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const content = e.target.result;
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            // Menempatkan isi file ke editor yang sesuai
+            if (extension === 'html') {
+                htmlEditor.value = content;
+            } else if (extension === 'css') {
+                cssEditor.value = content;
+            } else if (extension === 'js') {
+                jsEditor.value = content;
+            }
+        };
+        reader.readAsText(file);
     }
-}
-
-// Fungsi untuk memuat naik kod
-function uploadCode(event) {
-    const file = event.target.files[0];
-    if (!file) {
-        statusMessage.textContent = 'No file selected!';
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 2000);
-        return;
-    }
-
-    // Semak jika textarea sudah mengandungi kod
-    if (codeInput.value.trim() && !confirm('Kod sedia ada akan ditimpa. Teruskan?')) {
-        event.target.value = '';
-        return;
-    }
-
-    // Semak jenis fail
-    const validTypes = ['text/html', 'text/plain', 'application/javascript', 'text/css'];
-    if (!validTypes.includes(file.type)) {
-        statusMessage.textContent = 'Invalid file type! Please upload .html, .txt, .js, or .css';
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 3000);
-        event.target.value = '';
-        return;
-    }
-
-    // Baca kandungan fail
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        codeInput.value = e.target.result;
-        autoResizeTextarea();
-        runCode(); // Jalankan kod secara automatik
-        statusMessage.textContent = 'File uploaded successfully!';
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 2000);
-    };
-    reader.onerror = function() {
-        statusMessage.textContent = 'Error reading file! Please try again.';
-        setTimeout(() => {
-            statusMessage.textContent = 'Ready';
-        }, 3000);
-    };
-    reader.readAsText(file);
-
-    // Tetapkan semula input fail
-    event.target.value = '';
-}
-
-// Auto-run kod semasa halaman dimuatkan
-window.addEventListener('load', () => {
-    // Masukkan contoh kod
-    codeInput.value = `<div style="text-align: center; margin-top: 20px; color: blue; font-size: 18px;">
-                        Hello World!
-                      </div>
-                      <script>
-                        console.log('Code editor siap digunakan!');
-                      </script>`;
-    runCode();
-
-    // Auto-resize textarea berdasarkan kandungan
-    codeInput.addEventListener('input', autoResizeTextarea);
-    autoResizeTextarea();
 });
-
-// Fungsi untuk auto-resize textarea
-function autoResizeTextarea() {
-    codeInput.style.height = 'auto';
-    codeInput.style.height = `${Math.min(codeInput.scrollHeight, window.innerHeight * 0.6)}px`;
-}
