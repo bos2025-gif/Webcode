@@ -22,7 +22,7 @@
                 <textarea id="code-input" inputmode="text" placeholder="Masukkan kod HTML, CSS, dan JS di sini...&#10;&#10;Contoh:&#10;&lt;div style='color: blue;'&gt;Hello World!&lt;/div&gt;&#10;&lt;script&gt;console.log('Hello!');&lt;/script&gt;"></textarea>
             </div>
             
-            <!-- Butang untuk menjalankan, menyimpan, dan mengosongkan kod -->
+            <!-- Butang untuk menjalankan, menyimpan, mengosongkan, dan memuat naik kod -->
             <div class="button-group">
                 <button id="run-btn">
                     <i class="fas fa-play"></i> Run Code
@@ -33,6 +33,10 @@
                 <button id="clear-btn">
                     <i class="fas fa-trash"></i> Clear Code
                 </button>
+                <button id="upload-btn">
+                    <i class="fas fa-upload"></i> Upload Code
+                </button>
+                <input type="file" id="file-input" accept=".html,.txt,.js,.css" style="display: none;">
             </div>
             
             <!-- Pratonton hasil kod dalam iframe -->
