@@ -123,7 +123,8 @@ button {
     transition: var(--transition);
     box-shadow: var(--shadow);
     touch-action: manipulation;
-    flex: 1; /* Memastikan butang mengambil ruang sama rata */
+    flex: 1;
+    min-width: 120px; /* Pastikan butang tidak terlalu kecil pada skrin kecil */
 }
 
 button:hover {

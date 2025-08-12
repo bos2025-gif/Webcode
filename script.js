@@ -22,23 +22,25 @@ function runCode() {
         const code = codeInput.value;
         previewFrame.srcdoc = code;
 
-        // Masuk ke mod skrin penuh
+        // Masuk ke mod skrin penuh dengan keserasian pelbagai pelayar
         if (previewFrame.requestFullscreen) {
             previewFrame.requestFullscreen();
-        } else if (previewFrame.webkitRequestFullscreen) { /* Safari */
+        } else if (previewFrame.webkitRequestFullscreen) { // Safari
             previewFrame.webkitRequestFullscreen();
-        } else if (previewFrame.mozRequestFullScreen) { /* Firefox */
+        } else if (previewFrame.mozRequestFullScreen) { // Firefox
             previewFrame.mozRequestFullScreen();
+        } else if (previewFrame.msRequestFullscreen) { // Edge/IE
+            previewFrame.msRequestFullscreen();
         }
 
         setTimeout(() => {
-           COME2 statusMessage.textContent = 'Fullscreen (Press Esc to exit)';
+            statusMessage.textContent = 'Fullscreen (Press Esc to exit)';
         }, 500);
     } catch (error) {
-        statusMessage.textContent = 'Error';
+        statusMessage.textContent = 'Error: ' + error.message;
         setTimeout(() => {
             statusMessage.textContent = 'Ready';
-        }, 2000);
+        }, 3000);
     }
 }
 
@@ -102,13 +104,20 @@ function uploadCode(event) {
         return;
     }
 
+    // Semak jika textarea sudah mengandungi kod
+    if (codeInput.value.trim() && !confirm('Kod sedia ada akan ditimpa. Teruskan?')) {
+        event.target.value = '';
+        return;
+    }
+
     // Semak jenis fail
     const validTypes = ['text/html', 'text/plain', 'application/javascript', 'text/css'];
     if (!validTypes.includes(file.type)) {
         statusMessage.textContent = 'Invalid file type! Please upload .html, .txt, .js, or .css';
         setTimeout(() => {
             statusMessage.textContent = 'Ready';
-        }, 2000);
+        }, 3000);
+        event.target.value = '';
         return;
     }
 
@@ -118,16 +127,16 @@ function uploadCode(event) {
         codeInput.value = e.target.result;
         autoResizeTextarea();
         runCode(); // Jalankan kod secara automatik
-        statusMessage.textContent = 'File uploaded!';
+        statusMessage.textContent = 'File uploaded successfully!';
         setTimeout(() => {
             statusMessage.textContent = 'Ready';
         }, 2000);
     };
     reader.onerror = function() {
-        statusMessage.textContent = 'Error reading file!';
+        statusMessage.textContent = 'Error reading file! Please try again.';
         setTimeout(() => {
             statusMessage.textContent = 'Ready';
-        }, 2000);
+        }, 3000);
     };
     reader.readAsText(file);
 
